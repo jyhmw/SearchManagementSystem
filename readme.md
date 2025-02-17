@@ -183,4 +183,6 @@
 ### 用户登录验证模块
 
 1. 使用SpringSecurity为基础安全框架
-2. 
+2. 使用io.jsonwebtoken的api生成加密token
+3. TokenUtil类生成、验证token（需要时获取到userId）
+4. PasswordUtil类加密、比对密码是否正确
