@@ -32,4 +32,6 @@ public class ResearchAchievement {
 
     @TableField("subject_id")
     private Integer subjectId; // 外键字段直接存储ID
+
+    private Boolean isPublic; //是否公开
 }

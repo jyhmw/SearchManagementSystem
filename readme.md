@@ -161,13 +161,18 @@
    );
    ~~~
 
-   **新增完后的ER图**
+9. 补充 - 为了体现对科研成果的保护科研成果表(research_achievement)新增是否公开选项
 
-   ![image-20250217212236071](readme/image-20250217212236071.png)
+   ~~~ mysql
+   ALTER TABLE research_achievement
+   ADD COLUMN is_public TINYINT(1) DEFAULT 0;  -- 0 表示不公开，1 表示公开
+   ~~~
+
+   
 
 ### ER图
 
-![image-20250217203331321](readme/image-20250217203331321.png)
+![image-20250217212236071](readme/image-20250217212236071.png)
 
 ## 实体类设计
 
