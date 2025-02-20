@@ -18,10 +18,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TokenUtil {
     private static final String SECRET_KEY = "jyhdw";
-    private static final long EXPIRATION_TIME = 30 * 60 * 1000;
+    private static final long EXPIRATION_TIME = 30 * 60 * 1000; //有效时间半小时
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
 
     public static byte[] expandKey(String secretKey) throws NoSuchAlgorithmException {
         //单向哈希函数，将任意长度的数据转换为固定长度
@@ -33,12 +31,12 @@ public class TokenUtil {
 
     /**
      * 生成加密后的token
-     * @param userId
+     * @param username
      * @return
      */
-    public String generateToken(String userId) throws NoSuchAlgorithmException {
+    public String generateToken(String username) throws NoSuchAlgorithmException {
         String token = Jwts.builder()
-                .setSubject(userId)
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, expandKey(SECRET_KEY))
@@ -69,7 +67,7 @@ public class TokenUtil {
      * @param token
      * @return
      */
-    public String getUserIdFromToken(String token) throws NoSuchAlgorithmException {
+    public String getUserNameFromToken(String token) throws NoSuchAlgorithmException {
         Claims claims = Jwts.parser()
                 .setSigningKey(expandKey(SECRET_KEY))
                 .build()

@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 public class PasswordUtil {
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public static String encryptPassword(String rawPassword) {
+    public String encryptPassword(String rawPassword) {
         return encoder.encode(rawPassword);
     }
 
-    public static boolean matchesPassword(String rawPassword, String encryptedPassword) {
+    public boolean matchesPassword(String rawPassword, String encryptedPassword) {
         return encoder.matches(rawPassword, encryptedPassword);
     }
 }

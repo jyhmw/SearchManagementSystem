@@ -15,15 +15,15 @@ public class User {
     @TableId(type = IdType.AUTO)
     private Integer userId;
 
-    private String username;
+    private String username; //用户名
 
-    private String password;
+    private String password; //密码
 
-    private String name;
+    private String name;  //名字
 
-    private String contact;
+    private String contact;  //联系方式
 
-    private String school;
+    private String school;  //学校
 
     @TableField("role_id")
     private Integer roleId; // 外键字段直接存储ID
