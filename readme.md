@@ -183,6 +183,13 @@
 ### 用户登录验证模块
 
 1. 使用SpringSecurity为基础安全框架
+   （注意这里前后端端口不一样，要显示配置cors以解决跨域问题）
 2. 使用io.jsonwebtoken的api生成加密token
 3. TokenUtil类生成、验证token（需要时获取到userId）
 4. PasswordUtil类加密、比对密码是否正确
+5. 使用JwtFilter过滤所有请求，验证每个请求中token的有效性（/login和/register请求不需要）
+
+### 用户管理模块
+
+1. 只有role为1的管理员角色才能管理用户
+2. 使用Pagehelper的分页查询，引入pageshelper分页插件

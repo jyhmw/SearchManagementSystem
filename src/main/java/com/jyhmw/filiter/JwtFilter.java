@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 @Component
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private TokenUtil tokenUtil;
@@ -49,10 +51,16 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         if (token != null && tokenUtil.validateToken(token)) {
             try {
+                if (tokenUtil.needRefresh(token)) {
+                    log.info("重新生成token");
+                    String refreshedToken = tokenUtil.refreshToken(token);
+                    response.setHeader("X-Refreshed-Token", refreshedToken);
+                }
                 String username = tokenUtil.getUserNameFromToken(token);
                 UserDetails userDetails = new User(username, "", new ArrayList<>());
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
             } catch (NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
             }

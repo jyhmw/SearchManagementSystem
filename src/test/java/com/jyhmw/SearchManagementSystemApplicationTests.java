@@ -1,7 +1,9 @@
 package com.jyhmw;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyhmw.entity.User;
 import com.jyhmw.mapper.UserMapper;
+import com.jyhmw.service.UserService;
 import com.jyhmw.util.PasswordUtil;
 import com.jyhmw.util.TokenUtil;
 import jakarta.annotation.Resource;
@@ -27,6 +29,8 @@ class SearchManagementSystemApplicationTests {
     PasswordUtil passwordUtil;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    UserService userService;
     @Test
     void testTokenUtil() throws NoSuchAlgorithmException {
         String token = tokenUtil.generateToken("1");
@@ -56,6 +60,14 @@ class SearchManagementSystemApplicationTests {
         int insert = userMapper.insert(user);
         System.out.println(insert);
     }
+
+    @Test
+    void testGetAllUser() {
+        Page<User> users = userService.getUsers(1, 10);
+        users.getRecords().forEach(user -> System.out.println(user.getContact()));
+        System.out.println();
+    }
+
 
 
 }

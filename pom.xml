@@ -82,6 +82,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+<!--这里因为使用MyBatisPlus，就使用了MyBatisPlus的分页方法没有用PageHelper-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.pagehelper</groupId>-->
+<!--            <artifactId>pagehelper</artifactId>-->
+<!--            <version>6.1.0</version>-->
+<!--        </dependency>-->
 
     </dependencies>
     <dependencyManagement>

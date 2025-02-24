@@ -62,11 +62,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        //一开始浏览器显示cors error 是因为跨域问题没有显示配置cors
         config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:8080"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         config.setAllowCredentials(true);
-
+        //一开始在JwtFilter中设置了响应头刷新后的token，但是浏览器能看到，axios请求获取不到，是因为没有显示暴露出来这个请求
+        config.setExposedHeaders(Arrays.asList("X-Refreshed-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

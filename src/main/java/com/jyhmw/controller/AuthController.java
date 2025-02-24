@@ -1,5 +1,6 @@
 package com.jyhmw.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyhmw.entity.User;
 import com.jyhmw.service.UserService;
 import com.jyhmw.util.*;
@@ -52,11 +53,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public RestResponse Register(@RequestBody Map<String, String> registerInformation) {
-        User user = new User();
-        user.setUsername(registerInformation.get("username"));
-
-        return null;
+    public RestResponse Register(@RequestBody User user) {
+        User sUser;
+        sUser = user;
+        sUser.setPassword(passwordUtil.encryptPassword(user.getPassword()));
+        userService.save(sUser);
+        return RestResponseUtils.success("注册成功，请重新登录");
     }
+
+    @GetMapping("/getUsers")
+    public RestResponse<Page> getUsers() {
+        return RestResponseUtils.success(userService.getUsers(1, 10));
+    }
+
+
 
  }

@@ -1,5 +1,6 @@
 package com.jyhmw.util;
 
+import ch.qos.logback.core.joran.event.SaxEventRecorder;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,8 +21,9 @@ public class TokenUtil {
     private static final String SECRET_KEY = "jyhdw";
     private static final long EXPIRATION_TIME = 30 * 60 * 1000; //有效时间半小时
 
+    private static final long REFRESH_TIME = 5 * 60 * 1000;
 
-    public static byte[] expandKey(String secretKey) throws NoSuchAlgorithmException {
+    public byte[] expandKey(String secretKey) throws NoSuchAlgorithmException {
         //单向哈希函数，将任意长度的数据转换为固定长度
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] keyBytes = secretKey.getBytes();
@@ -43,6 +45,8 @@ public class TokenUtil {
                 .compact();
         return token;
     }
+
+
 
     /**
      * 验证token方法
@@ -74,5 +78,36 @@ public class TokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+
+    /**
+     * 检查是否需要续期
+     */
+    public boolean needRefresh(String token) throws NoSuchAlgorithmException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(expandKey(SECRET_KEY))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        Date expireionDate = claims.getExpiration();
+        long diffTime = expireionDate.getTime() - System.currentTimeMillis();
+        return diffTime < REFRESH_TIME;
+    }
+
+    /**
+     * 续期Token
+     * @param token
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
+    public String refreshToken(String token) throws NoSuchAlgorithmException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(expandKey(SECRET_KEY))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        String username = claims.getSubject();
+        return generateToken(username);
     }
 }
